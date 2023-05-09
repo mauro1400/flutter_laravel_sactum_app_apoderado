@@ -27,6 +27,7 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
   bool _liveUpdate = true;
   late final Timer _timer;
   int _interactiveFlags = InteractiveFlag.all;
+  List<LatLng> _previousLocations = [];
 
   @override
   void initState() {
@@ -62,6 +63,8 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
 
         setState(() {
           _currentLatLng = newLatLng;
+          _previousLocations.add(
+              newLatLng); // Agregar la ubicación actual a la lista de ubicaciones previas
         });
       } else if (state is UbicacionFailure) {
         setState(() {});
@@ -122,6 +125,15 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
                     },
                   ),
                   MarkerLayer(markers: markers),
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: _previousLocations,
+                        strokeWidth: 5,
+                        color: Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
