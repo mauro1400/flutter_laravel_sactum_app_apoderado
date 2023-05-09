@@ -130,7 +130,7 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
                       Polyline(
                         points: _previousLocations,
                         strokeWidth: 5,
-                        color: Color.fromARGB(255, 255, 0, 0).withOpacity(0.5),
+                        color: Color.fromARGB(255, 0, 38, 255).withOpacity(0.5),
                       ),
                     ],
                   ),
