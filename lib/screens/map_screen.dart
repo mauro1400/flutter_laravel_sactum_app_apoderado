@@ -92,7 +92,7 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Ubicacion Actual',
+          'Ubicacion Actual del Trasporte',
           style: GoogleFonts.poppins(
             fontSize: size * 0.050,
             color: Colors.white,
