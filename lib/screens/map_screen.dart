@@ -17,6 +17,7 @@ class LiveLocationPage extends StatefulWidget {
   const LiveLocationPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _LiveLocationPageState createState() => _LiveLocationPageState();
 }
 
@@ -27,14 +28,14 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
   bool _liveUpdate = true;
   late final Timer _timer;
   int _interactiveFlags = InteractiveFlag.all;
-  List<LatLng> _previousLocations = [];
+  final List<LatLng> _previousLocations = [];
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
     _initLocationService();
-    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (_) {
       context.read<UbicacionBloc>().add(const ObtenrUbicacionEvent());
     });
   }

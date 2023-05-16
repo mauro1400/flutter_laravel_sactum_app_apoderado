@@ -19,7 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           'email': event.email,
           'password': event.password,
         };
-        var response = await http.post(
+        var response = await http.wpost(
           Uri.parse('${url}login'),
           headers: {
             'Accept': 'application/json',
@@ -42,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
     on<LogoutEvent>((event, emit) async {
       var token = box.read('token');
-      var response = await http.post(
+      var response = await http.wpost(
         Uri.parse('${url}logout'),
         headers: {
           'Authorization': 'Bearer $token',

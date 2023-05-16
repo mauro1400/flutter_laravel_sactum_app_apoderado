@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_apoderado/bloc/auth/auth_bloc.dart';
-import 'package:flutter_apoderado/screens/widget/input_widget_e.dart';
-import 'package:flutter_apoderado/screens/widget/input_widget_p.dart';
+import 'package:flutter_apoderado/widget/input_widget_e.dart';
+import 'package:flutter_apoderado/widget/input_widget_p.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 

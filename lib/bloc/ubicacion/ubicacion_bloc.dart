@@ -14,7 +14,7 @@ class UbicacionBloc extends Bloc<UbicacionEvent, UbicacionState> {
   UbicacionBloc() : super(UbicacionInitial()) {
     on<ObtenrUbicacionEvent>((event, emit) async {
       try {
-        var response = await http.post(
+        var response = await http.wpost(
           Uri.parse('${url}enviarUbicacion'),
           headers: {
             'Accept': 'application/json',
