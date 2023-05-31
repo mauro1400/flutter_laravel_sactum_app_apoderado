@@ -28,10 +28,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         if (response.statusCode == 200) {
           var token = json.decode(response.body)['token'];
-          var idPersona = json.decode(response.body)['user']['id_persona'];
+          var idPersona = json.decode(response.body)['user']['id_persona'].toString();
           box.write('id_persona', idPersona);
           box.write('token', token);
-          emit(AuthSuccess(token));
+          emit(AuthSuccess(token,idPersona));
         } else {
           AuthFailure(json.decode(response.body)['errorMessage']);
         }

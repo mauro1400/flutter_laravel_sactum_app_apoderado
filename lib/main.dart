@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_apoderado/bloc/notificacion/notificacion_bloc.dart';
 import 'package:flutter_apoderado/bloc/ubicacion/ubicacion_bloc.dart';
 import 'package:flutter_apoderado/screens/loading_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,8 @@ void main() {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthBloc()),
-        BlocProvider(create: (context) => UbicacionBloc()),
+        BlocProvider(create: (context) => UbicacionBloc(context)),
+        BlocProvider(create: (context) => NotificacionBloc(context)),
       ],
       child: const MyApp(),
     ),

@@ -12,11 +12,12 @@ class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
   final String token;
+  final String idPersona;
 
-  const AuthSuccess(this.token);
+  const AuthSuccess(this.token, this.idPersona);
 
   @override
-  List<Object> get props => [token];
+  List<Object> get props => [token,idPersona];
 }
 
 class AuthFailure extends AuthState {
@@ -29,4 +30,3 @@ class AuthFailure extends AuthState {
 
   void get error => 'error';
 }
-

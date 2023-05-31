@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_apoderado/bloc/auth/auth_bloc.dart';
+import 'package:flutter_apoderado/bloc/notificacion/notificacion_bloc.dart';
 import 'package:flutter_apoderado/bloc/ubicacion/ubicacion_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -9,8 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import '../main.dart';
 
-// Esta constante no necesita ser pública, ya que solo se usa en este archivo.
-const _mapboxDownloadsToken =
+// ignore: constant_identifier_names
+const MAPBOX_DOWNLOADS_TOKEN =
     'sk.eyJ1IjoiaGFtZXItMSIsImEiOiJjbGg1Z2plNXMxYndyM3JwajRsNGhudHZoIn0.Rc--5gsSS2uvEQFahKq48w';
 
 class LiveLocationPage extends StatefulWidget {
@@ -27,6 +27,8 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
   LatLng _currentLatLng = LatLng(0, 0);
   bool _liveUpdate = true;
   late final Timer _timer;
+  Timer? timer;
+
   int _interactiveFlags = InteractiveFlag.all;
   final List<LatLng> _previousLocations = [];
 
@@ -37,12 +39,14 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
     _initLocationService();
     _timer = Timer.periodic(const Duration(seconds: 10), (_) {
       context.read<UbicacionBloc>().add(const ObtenrUbicacionEvent());
+      context.read<NotificacionBloc>().add(const ObtenerNotificacionEvent());
     });
   }
 
   @override
   void dispose() {
     _timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -64,8 +68,7 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
 
         setState(() {
           _currentLatLng = newLatLng;
-          _previousLocations.add(
-              newLatLng); // Agregar la ubicación actual a la lista de ubicaciones previas
+          _previousLocations.add(newLatLng);
         });
       } else if (state is UbicacionFailure) {
         setState(() {});
@@ -105,6 +108,16 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
         padding: const EdgeInsets.all(8),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      'Ubicacion actual: (${_currentLatLng.latitude}, ${_currentLatLng.longitude}).')
+                ],
+              ),
+            ),
             Flexible(
               child: FlutterMap(
                 mapController: _mapController,
@@ -121,7 +134,7 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
                     urlTemplate:
                         'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
                     additionalOptions: const {
-                      'accessToken': _mapboxDownloadsToken,
+                      'accessToken': MAPBOX_DOWNLOADS_TOKEN,
                       'id': 'hamer-1/cldvbrb05000401lbc4pddtpo'
                     },
                   ),
@@ -131,7 +144,8 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
                       Polyline(
                         points: _previousLocations,
                         strokeWidth: 5,
-                        color: Color.fromARGB(255, 0, 38, 255).withOpacity(0.5),
+                        color: const Color.fromARGB(255, 0, 38, 255)
+                            .withOpacity(0.5),
                       ),
                     ],
                   ),
@@ -163,7 +177,6 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
             onPressed: () {
               setState(() {
                 _liveUpdate = !_liveUpdate;
-
                 if (_liveUpdate) {
                   _interactiveFlags = InteractiveFlag.rotate |
                       InteractiveFlag.pinchZoom |
