@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_apoderado/bloc/auth/auth_bloc.dart';
 import 'package:flutter_apoderado/bloc/notificacion/notificacion_bloc.dart';
 import 'package:flutter_apoderado/bloc/ubicacion/ubicacion_bloc.dart';
+import 'package:flutter_apoderado/widget/custom_popup.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,9 +38,9 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
     super.initState();
     _mapController = MapController();
     _initLocationService();
+    _notificacion();
     _timer = Timer.periodic(const Duration(seconds: 10), (_) {
       context.read<UbicacionBloc>().add(const ObtenrUbicacionEvent());
-      context.read<NotificacionBloc>().add(const ObtenerNotificacionEvent());
     });
   }
 
@@ -72,6 +73,44 @@ class _LiveLocationPageState extends State<LiveLocationPage> {
         });
       } else if (state is UbicacionFailure) {
         setState(() {});
+      }
+    });
+  }
+
+  int estadoAnterior = -1; // Variable para almacenar el estado anterior
+
+  void _notificacion() {
+    Timer.periodic(const Duration(seconds: 10), (_) {
+      context.read<NotificacionBloc>().add(const ObtenerNotificacionEvent());
+      final bloc = context.read<NotificacionBloc>();
+      bloc.add(const ObtenerNotificacionEvent());
+      final estado = bloc.state.idEstado;
+      print(estado);
+      if (estado != estadoAnterior) {
+        // Comprobar si el estado ha cambiado
+        estadoAnterior = estado; // Actualizar el estado anterior
+
+        if (estado == 5) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const CustomAlertDialog(
+                message: '¡Mensaje emergente cuando el estado es 5!',
+              );
+            },
+          );
+          print('¡Mensaje emergente cuando el estado es 5!');
+        } else if (estado == 4) {
+          print('¡Mensaje emergente cuando el estado es 4!');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const CustomAlertDialog(
+                message: '¡Mensaje emergente cuando el estado es 4!',
+              );
+            },
+          );
+        }
       }
     });
   }

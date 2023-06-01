@@ -4,11 +4,15 @@ class NotificacionState extends Equatable {
   const NotificacionState();
   @override
   List<Object?> get props => [];
+
+  get idEstado => 1;
 }
 
 class NotificacionInitial extends NotificacionState {}
-class NotificacionSuccess extends AuthState {
-  final String idEstado;
+
+class NotificacionSuccess extends NotificacionState {
+  @override
+  final int idEstado;
 
   const NotificacionSuccess(this.idEstado);
 
@@ -26,4 +30,3 @@ class NotificacionFailure extends NotificacionState {
 
   void get error => 'error';
 }
-
